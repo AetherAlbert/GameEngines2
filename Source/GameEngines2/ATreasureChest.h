@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ATreasureChest.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class GAMEENGINES2_API AATreasureChest : public AActor
 {
@@ -23,8 +25,16 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UStaticMeshComponent> TreasureMesh;
 
+	UPROPERTY(EditDefaultsOnly)
+	TObjectPtr<UBoxComponent> BoxCollider;
+
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	void CollectTreasure();
+
+	UPROPERTY()
+	bool bCollected;
 };

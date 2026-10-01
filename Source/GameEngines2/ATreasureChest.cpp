@@ -2,6 +2,7 @@
 
 
 #include "ATreasureChest.h"
+#include "Components/BoxComponent.h"
 
 // Sets default values
 AATreasureChest::AATreasureChest()
@@ -13,6 +14,17 @@ AATreasureChest::AATreasureChest()
 	TreasureMesh = CreateDefaultSubobject<UStaticMeshComponent>("TreasureMesh");
 
 	TreasureMesh->SetGenerateOverlapEvents(false);
+
+	//Initialize the Box Collider
+	BoxCollider = CreateDefaultSubobject<UBoxComponent>("Collision Detection");
+
+	//Set up the root component
+	SetRootComponent(BoxCollider);
+
+	//Parent the treasure mesh component to the box collider
+	TreasureMesh->SetupAttachment(BoxCollider);
+
+	bCollected = false;
 
 }
 
@@ -30,3 +42,14 @@ void AATreasureChest::Tick(float DeltaTime)
 
 }
 
+void AATreasureChest::CollectTreasure()
+{
+	if (!bCollected)
+	{
+		bCollected = true;
+		// Hide the treasure mesh
+		TreasureMesh->SetVisibility(false);
+		// Disable collision
+		BoxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	}
+}
