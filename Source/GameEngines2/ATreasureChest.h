@@ -28,12 +28,22 @@ protected:
 	UPROPERTY(EditDefaultsOnly)
 	TObjectPtr<UBoxComponent> BoxCollider;
 
+	UFUNCTION()
+	void Collected();
+
+	UFUNCTION()
+	void OnBeginOverlapComponentEvent(UPrimitiveComponent *
+		OverlappedComponent, AActor * OtherActor,
+		UPrimitiveComponent * OtherComp, int32
+		OtherBodyIndex, bool bFromSweep, const FHitResult &
+		SweepResult);
+
+	void AddOnscreenDebugMessage(FString message, FColor color, float duration);
+
 
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	void CollectTreasure();
 
 	UPROPERTY()
 	bool bCollected;

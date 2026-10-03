@@ -17,6 +17,8 @@ AATreasureChest::AATreasureChest()
 
 	//Initialize the Box Collider
 	BoxCollider = CreateDefaultSubobject<UBoxComponent>("Collision Detection");
+	
+	BoxCollider->OnComponentBeginOverlap.AddDynamic(this, &AATreasureChest::OnBeginOverlapComponentEvent);
 
 	//Set up the root component
 	SetRootComponent(BoxCollider);
@@ -32,8 +34,38 @@ AATreasureChest::AATreasureChest()
 void AATreasureChest::BeginPlay()
 {
 	Super::BeginPlay();
+	GEngine->AddOnScreenDebugMessage(-1, 5, FColor::Cyan, TEXT("Treasure Not Collected!"));
 	
 }
+
+void AATreasureChest::Collected()
+{
+	
+	TreasureMesh->SetVisibility(false);
+	TreasureMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	
+
+}
+
+void AATreasureChest::OnBeginOverlapComponentEvent(UPrimitiveComponent* OverlappedComponent,
+	AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, 
+	const FHitResult& SweepResult)
+{
+	//Cast to character other actor -> object of Character overlap
+	// Hint is constructor and AddDynamic
+	if (OtherActor && OtherActor != this) {
+		AddOnscreenDebugMessage(TEXT("Treasure Collected!"), FColor::Cyan, 5.0f);
+		bCollected = true;
+		Collected();
+	}
+	
+}
+
+void AATreasureChest::AddOnscreenDebugMessage(FString message, FColor color, float duration)
+{
+	GEngine->AddOnScreenDebugMessage(-1, duration, color, message);
+}
+
 
 // Called every frame
 void AATreasureChest::Tick(float DeltaTime)
@@ -42,14 +74,3 @@ void AATreasureChest::Tick(float DeltaTime)
 
 }
 
-void AATreasureChest::CollectTreasure()
-{
-	if (!bCollected)
-	{
-		bCollected = true;
-		// Hide the treasure mesh
-		TreasureMesh->SetVisibility(false);
-		// Disable collision
-		BoxCollider->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-	}
-}
