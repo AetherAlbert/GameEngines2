@@ -40,7 +40,7 @@ void AATreasureChest::BeginPlay()
 
 void AATreasureChest::Collected()
 {
-	
+	AddOnscreenDebugMessage(TEXT("Treasure Collected!"), FColor::Cyan, 5.0f);
 	TreasureMesh->SetVisibility(false);
 	TreasureMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	
@@ -53,8 +53,9 @@ void AATreasureChest::OnBeginOverlapComponentEvent(UPrimitiveComponent* Overlapp
 {
 	//Cast to character other actor -> object of Character overlap
 	// Hint is constructor and AddDynamic
-	if (OtherActor && OtherActor != this) {
-		AddOnscreenDebugMessage(TEXT("Treasure Collected!"), FColor::Cyan, 5.0f);
+	
+	if (OtherActor && OtherActor != this && !bCollected) {
+
 		bCollected = true;
 		Collected();
 	}
